@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json; charset=UTF-8');
 error_reporting(E_ALL);
-ini_set('display_errors', 0); // Disable error display, handle errors properly
+ini_set('display_errors', 1); // Disable error display, handle errors properly
 
 $host = "db.r1.websupport.sk";
 $user = "unitadmin";
@@ -50,15 +50,17 @@ try {
         $data['telephone'] ?? null,
         $data['email'] ?? null,
         $data['address'] ?? null,
-        date('d-m-Y') // Current timestamp
+        date('Y-m-d') // Current timestamp
     );
 
     // Execute query
     $result = pg_query_params($conn, $sql, $params);
 
     if (!$result) {
-        throw new Exception(pg_last_error($conn));
-    }
+    $err = pg_last_error($conn);
+    error_log("DB ERROR: " . $err);
+    throw new Exception("Database query failed: " . $err);
+}
 
     echo json_encode(['success' => true, 'message' => 'User registered successfully']);
 
