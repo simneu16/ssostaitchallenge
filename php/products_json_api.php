@@ -1,9 +1,9 @@
 <?php
 header('Content-Type: application/json; charset=UTF-8');
 
-$host = "db.r1.websupport.sk";
+$host = "localhost";
 $user = "unitadmin";
-$pass = ".Lo9,ki8";
+$pass = ".lo9,ki8";
 $dbname = "unitmate";
 $port = 5432;
 
@@ -16,7 +16,7 @@ if (!$conn) {
     exit();
 }
 
-$sql = 'SELECT "name", category, base_price, "status", photo_link, "description", params FROM products;';
+$sql = 'SELECT "name", category, base_price, "status", photo_link, "description" FROM products;';
 $result = pg_query($conn, $sql);
 
 if (!$result) {
