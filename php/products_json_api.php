@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json; charset=UTF-8');
 
-$host = "localhost";
+$host = "db.r1.websupport.sk";
 $user = "unitadmin";
 $pass = ".lo9,ki8";
 $dbname = "unitmate";
