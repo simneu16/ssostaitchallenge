@@ -558,7 +558,7 @@
 
     async function loadProducts() {
       try {
-        const response = await fetch('http://localhost/php/products_json_api.php');
+        const response = await fetch('https://ssostaitchallenge-production.up.railway.app/php/products_json_api.php');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
