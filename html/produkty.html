@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="sk">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UnitMate - Produkty</title>
+  <link rel="stylesheet" href="../css/default.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #0f2557;
+      --secondary: #1e3a8a;
+      --accent: #3b82f6;
+      --light: #f8fafc;
+      --text: #1e293b;
+      --success: #22c55e;
+      --warning: #f59e0b;
+    }
+
+    /* Navbar */
+    nav {
+      background: var(--primary);
+      padding: 1rem 2rem;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: white;
+      text-decoration: none;
+    }
+
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      transition: color 0.3s;
+      font-weight: 500;
+    }
+
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    .menu-toggle {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 5px;
+    }
+
+    .menu-toggle span {
+      width: 25px;
+      height: 3px;
+      background: white;
+      transition: all 0.3s;
+    }
+
+    .menu-toggle.active span:nth-child(1) {
+      transform: rotate(45deg) translate(8px, 8px);
+    }
+
+    .menu-toggle.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .menu-toggle.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(7px, -7px);
+    }
+
+    /* Products Header */
+    .products-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      padding: 120px 2rem 60px;
+      text-align: center;
+      margin-top: 60px;
+    }
+
+    .products-header h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      font-weight: 800;
+    }
+
+    .products-header p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+
+    /* Search Section */
+    .search-section {
+      max-width: 1200px;
+      margin: -30px auto 40px;
+      padding: 0 2rem;
+    }
+
+    .search-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .search-box {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 1rem 1.5rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 50px;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .search-button {
+      padding: 1rem 2rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .search-button:hover {
+      background: var(--secondary);
+      transform: translateY(-2px);
+    }
+
+    /* Products Grid */
+    .products-container {
+      max-width: 1200px;
+      margin: 40px auto 80px;
+      padding: 0 2rem;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+    }
+
+    .product-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .product-image {
+      width: 100%;
+      height: 260px;
+      overflow: hidden;
+      display: block;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--secondary) 100%);
+      position: relative;
+    }
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    .product-info {
+      padding: 1.5rem;
+    }
+
+    .product-name {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .product-description {
+      color: #64748b;
+      font-size: 0.9rem;
+      margin: 0.5rem 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    .product-price {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .product-availability {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .available {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    .limited {
+      background: #fef3c7;
+      color: #b45309;
+    }
+
+    .unavailable {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #64748b;
+    }
+
+    .no-results h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--primary);
+      color: white;
+      padding: 3rem 2rem 1rem;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .footer-section h3 {
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+    }
+
+    .footer-section p,
+    .footer-section a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-section a:hover {
+      color: white;
+    }
+
+    .copyright {
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* ===== profile / auth styles (added) ===== */
+    .profile-wrap {
+      position: relative;
+      font-family: inherit;
+    }
+
+    .profile-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: none;
+      color: white;
+      cursor: pointer;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+    }
+
+    .profile-btn:focus {
+      outline: 2px solid rgba(255, 255, 255, 0.12);
+      outline-offset: 2px;
+    }
+
+    .profile-icon svg {
+      width: 18px;
+      height: 18px;
+      fill: white;
+      opacity: 0.95;
+      display: block;
+    }
+
+    .profile-name {
+      color: white;
+      white-space: nowrap;
+    }
+
+    .profile-caret {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.8rem;
+    }
+
+    .profile-dropdown {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: calc(100% + 8px);
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 8px 30px rgba(16, 24, 40, 0.12);
+      overflow: hidden;
+      min-width: 200px;
+      z-index: 1500;
+      font-size: 0.95rem;
+    }
+
+    .profile-item {
+      display: block;
+      padding: 10px 14px;
+      color: var(--text);
+      text-decoration: none;
+      background: transparent;
+      border: 0;
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .profile-item:hover {
+      background: #f8fafc;
+    }
+
+    .profile-item.logout {
+      background: #fff7f7;
+      color: #b91c1c;
+    }
+
+    @media (max-width: 768px) {
+      .search-section {
+        margin: -20px auto 30px;
+        padding: 0 1rem;
+      }
+
+      .search-container {
+        padding: 1.5rem;
+      }
+
+      .search-box {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .search-input {
+        width: 100%;
+      }
+
+      .search-button {
+        width: 100%;
+        padding: 0.9rem 1.5rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: flex;
+      }
+
+      .nav-links {
+        position: fixed;
+        left: -100%;
+        top: 60px;
+        flex-direction: column;
+        background: var(--primary);
+        width: 100%;
+        text-align: center;
+        transition: left 0.3s;
+        padding: 2rem 0;
+        gap: 0;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .nav-links.active {
+        left: 0;
+      }
+
+      .nav-links li {
+        padding: 1rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .register-card {
+        padding: 2rem;
+      }
+
+      .register-title {
+        font-size: 2rem;
+      }
+
+      .footer-content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+        padding: 0 0.5rem;
+      }
+
+      .product-card {
+        padding: 0;
+      }
+
+      .product-image {
+        height: 200px;
+      }
+
+      .product-info {
+        padding: 1rem;
+      }
+
+      .product-name {
+        font-size: 1.1rem;
+      }
+
+      .product-price {
+        font-size: 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .products-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .product-image {
+        height: 240px;
+      }
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .logo img {
+      height: 40px;
+      width: auto;
+    }
+
+    /* ===== end profile styles ===== */
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav>
+    <div class="nav-container">
+      <a href="../index.html" class="logo">
+        <img src="../resources/img/unitmate_logo_wb.png" alt="UnitMate Logo">
+        UnitMate
+      </a>
+      <div class="menu-toggle" id="mobile-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="../index.html">Domov</a></li>
+        <li><a href="produkty.html">Produkty</a></li>
+        <li><a href="objednavky.html">Objednávky</a></li>
+        <li><a href="cart.html" title="Košík">🛒 Košík</a></li>
+        <li id="authLinkContainer"><a href="login.html">Prihlásenie</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Products Header -->
+  <section class="products-header">
+    <h1>Naše produkty</h1>
+    <p>Inteligentné riešenia pre váš smart domov</p>
+  </section>
+
+  <!-- Search Section -->
+  <section class="search-section">
+    <div class="search-container">
+      <div class="search-box">
+        <input type="text" class="search-input" id="searchInput" placeholder="Hľadať produkt...">
+        <button class="search-button" onclick="searchProducts()">🔍 Hľadať</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products Grid -->
+  <section class="products-container">
+    <div class="products-grid" id="productsGrid">
+      <!-- Products will be populated by JavaScript -->
+    </div>
+    <div class="no-results" id="noResults" style="display: none;">
+      <h2>Žiadne výsledky</h2>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>UnitMate</h3>
+        <p>Pokoj v každom vchode</p>
+        <p>Prinášame inteligentné riešenia pre moderné bývanie.</p>
+      </div>
+      <div class="footer-section">
+        <h3>Kontakt</h3>
+        <p>📧 info@unitmate.sk</p>
+        <p>📱 +421 900 123 456</p>
+        <p>📍 Bratislava, Slovensko</p>
+      </div>
+      <div class="footer-section">
+        <h3>Rýchle odkazy</h3>
+        <a href="../index.html">Domov</a>
+        <a href="produkty.html">Produkty</a>
+        <a href="objednavky.html">Objednávky</a>
+        <a href="login.html">Prihlásenie</a>
+      </div>
+      <div class="footer-section">
+        <h3>Sledujte nás</h3>
+        <a href="#">Facebook</a>
+        <a href="#">Instagram</a>
+        <a href="#">LinkedIn</a>
+      </div>
+    </div>
+    <div class="copyright">
+      <p>&copy; 2025 UnitMate. Všetky práva vyhradené.</p>
+    </div>
+  </footer>
+
+  <script>
+    let products = []; // Global products array
+
+    async function loadProducts() {
+      try {
+        const response = await fetch('http://localhost/php/products_json_api.php');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        products = await response.json();
+        renderProducts(products);
+      } catch (error) {
+        console.error('Error:', error);
+        renderProducts([]);
+      }
+    }
+
+    function searchProducts() {
+      const searchInput = document.getElementById('searchInput');
+      const searchTerm = searchInput.value.toLowerCase().trim();
+      const productCards = document.querySelectorAll('.product-card');
+      const noResults = document.getElementById('noResults');
+      let hasVisibleProducts = false;
+
+      productCards.forEach(card => {
+        const name = card.querySelector('.product-name').textContent.toLowerCase();
+        const description = card.querySelector('.product-description').textContent.toLowerCase();
+
+        if (name.includes(searchTerm) || description.includes(searchTerm) || searchTerm === '') {
+          card.style.display = 'block';
+          hasVisibleProducts = true;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Show/hide no results message
+      const grid = document.getElementById('productsGrid');
+      if (!hasVisibleProducts) {
+        grid.style.display = 'none';
+        noResults.style.display = 'block';
+      } else {
+        grid.style.display = 'grid';
+        noResults.style.display = 'none';
+      }
+    }
+
+    function renderProducts(productsToRender) {
+      const grid = document.getElementById('productsGrid');
+      const noResults = document.getElementById('noResults');
+
+      if (!productsToRender || productsToRender.length === 0) {
+        grid.style.display = 'none';
+        noResults.style.display = 'block';
+        return;
+      }
+
+      grid.style.display = 'grid';
+      noResults.style.display = 'none';
+
+      grid.innerHTML = productsToRender.map(product => `
+            <div class="product-card" onclick="goToProductDetail(${JSON.stringify(product).replace(/"/g, '&quot;')})">
+                <div class="product-image">
+                    <img src="${product.photo_link}" alt="${product.name}">
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">${product.name}</h3>
+                    <p class="product-description">${product.description}</p>
+                    <div class="product-price">${product.base_price}€</div>
+                    <span class="product-availability ${getAvailabilityClass(product.status)}">
+                        ${getAvailabilityText(product.status)}
+                    </span>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function getAvailabilityClass(status) {
+      status = parseInt(status);
+      if (status > 10) return 'available';
+      if (status > 0) return 'limited';
+      return 'unavailable';
+    }
+
+    function getAvailabilityText(status) {
+      status = parseInt(status);
+      if (status > 10) return 'Skladom';
+      if (status > 0) return 'Posledné kusy';
+      return 'Vypredané';
+    }
+
+    function goToProductDetail(product) {
+      // Store product data in sessionStorage
+      sessionStorage.setItem('selectedProduct', JSON.stringify(product));
+      // Redirect to product detail page
+      window.location.href = 'produkt_subsite.html';
+    }
+
+    // Add event listeners
+    document.addEventListener('DOMContentLoaded', () => {
+      loadProducts();
+      const searchInput = document.getElementById('searchInput');
+      if (searchInput) {
+        searchInput.addEventListener('input', searchProducts);
+      }
+    });
+  </script>
+  <script src="js/mobile_dropdown.js"></script>
+  <!-- load shared auth UI script -->
+  <script src="js/auth.js"></script>
+
+  <script src="js/cart.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="sk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UnitMate - Registrácia</title>
+    <link rel="stylesheet" href="../css/default.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0f2557;
+            --secondary: #1e3a8a;
+            --accent: #3b82f6;
+            --light: #f8fafc;
+            --text: #1e293b;
+            --success: #22c55e;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            color: var(--text);
+            line-height: 1.6;
+            background: var(--light);
+        }
+
+        /* Navbar */
+        nav {
+            background: var(--primary);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            transition: all 0.3s;
+        }
+
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        /* Register Container */
+        .register-container {
+            max-width: 600px;
+            margin: 120px auto 80px;
+            padding: 0 2rem;
+        }
+
+        .register-card {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .register-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .register-subtitle {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .required-badge {
+            background: var(--danger);
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .optional-badge {
+            background: #94a3b8;
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-input.error {
+            border-color: var(--danger);
+        }
+
+        .error-message {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .input-hint {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-top: 0.3rem;
+        }
+
+        .password-strength {
+            margin-top: 0.5rem;
+        }
+
+        .strength-bar {
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 0.3rem;
+        }
+
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s;
+        }
+
+        .strength-text {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .register-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(15, 37, 87, 0.3);
+        }
+
+        .register-btn:hover {
+            background: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(15, 37, 87, 0.4);
+        }
+
+        .register-btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #64748b;
+        }
+
+        .login-link a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .success-message {
+            background: #dcfce7;
+            color: #15803d;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            display: none;
+            font-weight: 600;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: white;
+            padding: 3rem 2rem 1rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                left: -100%;
+                top: 60px;
+                flex-direction: column;
+                background: var(--primary);
+                width: 100%;
+                text-align: center;
+                transition: left 0.3s;
+                padding: 2rem 0;
+                gap: 0;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .nav-links li {
+                padding: 1rem 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .register-card {
+                padding: 2rem;
+            }
+
+            .register-title {
+                font-size: 2rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav>
+        <div class="nav-container">
+            <a href="../index.html" class="logo">
+                <img src="../resources/img/unitmate_logo_wb.png" alt="UnitMate Logo">
+                UnitMate
+            </a>
+            <div class="menu-toggle" id="mobile-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="../index.html">Domov</a></li>
+                <li><a href="produkty.html">Produkty</a></li>
+                <li><a href="objednavky.html">Objednávky</a></li>
+                <li><a href="cart.html" title="Košík">🛒 Košík</a></li>
+                <li><a href="login.html">Prihlásenie</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Register Container -->
+    <div class="register-container">
+        <div class="register-card">
+            <div class="register-header">
+                <h1 class="register-title">Registrácia</h1>
+                <p class="register-subtitle">Vytvorte si účet v UnitMate</p>
+            </div>
+
+            <div class="success-message" id="successMessage">
+                ✓ Účet bol úspešne vytvorený!
+            </div>
+
+            <form id="registerForm">
+                <!-- Required Fields -->
+                <div class="form-section">
+                    <div class="section-title">
+                        Povinné údaje
+                        <span class="required-badge">POVINNÉ</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="firstName">Meno *</label>
+                        <input type="text" id="firstName" name="firstname" class="form-input" required
+                            placeholder="Zadajte svoje meno">
+                        <div class="error-message" id="firstNameError">Meno je povinné</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="lastName">Priezvisko *</label>
+                        <input type="text" id="lastName" name="lastname" class="form-input" required
+                            placeholder="Zadajte svoje priezvisko">
+                        <div class="error-message" id="lastNameError">Priezvisko je povinné</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="username">Používateľské meno *</label>
+                        <input type="text" id="username" name="login" class="form-input" required
+                            placeholder="Zvoľte si používateľské meno">
+                        <div class="input-hint">Minimálne 4 znaky</div>
+                        <div class="error-message" id="usernameError">Používateľské meno musí mať aspoň 4 znaky</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="password">Heslo *</label>
+                        <input type="password" id="password" name="password" class="form-input" required
+                            placeholder="Vytvorte silné heslo">
+                        <div class="password-strength">
+                            <div class="strength-bar">
+                                <div class="strength-fill" id="strengthFill"></div>
+                            </div>
+                            <div class="strength-text" id="strengthText"></div>
+                        </div>
+                        <div class="input-hint">Minimálne 8 znakov, vrátane čísla a veľkého písmena</div>
+                        <div class="error-message" id="passwordError">Heslo musí mať aspoň 8 znakov</div>
+                    </div>
+                </div>
+
+                <!-- Optional Fields -->
+                <div class="form-section">
+                    <div class="section-title">
+                        Voliteľné údaje
+                        <span class="optional-badge">VOLITEĽNÉ</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="telephone">Telefón</label>
+                        <input type="tel" id="telephone" name="telephone" class="form-input"
+                            placeholder="+421 XXX XXX XXX">
+                        <div class="input-hint">Formát: +XXX XXX XXX XXX</div>
+                        <div class="error-message" id="telephoneError">Neplatný formát telefónneho čísla</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email</label>
+                        <input type="email" id="email" name="email" class="form-input" placeholder="vas@email.sk">
+                        <div class="error-message" id="emailError">Neplatný email</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="address">Adresa</label>
+                        <input type="text" id="address" name="address" class="form-input"
+                            placeholder="Ulica a číslo, Mesto PSČ">
+                    </div>
+                </div>
+
+                <button type="submit" class="register-btn">Vytvoriť účet</button>
+            </form>
+
+            <div class="login-link">
+                Už máte účet? <a href="login.html">Prihláste sa</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>UnitMate</h3>
+                <p>Pokoj v každom vchode</p>
+                <p>Prinášame inteligentné riešenia pre moderné bývanie.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Kontakt</h3>
+                <p>📧 info@unitmate.sk</p>
+                <p>📱 +421 900 123 456</p>
+                <p>📍 Bratislava, Slovensko</p>
+            </div>
+            <div class="footer-section">
+                <h3>Rýchle odkazy</h3>
+                <a href="#home">Domov</a>
+                <a href="#produkty">Produkty</a>
+                <a href="#objednavky">Objednávky</a>
+                <a href="#prihlasenie">Prihlásenie</a>
+            </div>
+            <div class="footer-section">
+                <h3>Sledujte nás</h3>
+                <a href="#">Facebook</a>
+                <a href="#">Instagram</a>
+                <a href="#">LinkedIn</a>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 UnitMate. Všetky práva vyhradené.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Password strength checker
+        const passwordInput = document.getElementById('password');
+        const strengthFill = document.getElementById('strengthFill');
+        const strengthText = document.getElementById('strengthText');
+
+        passwordInput.addEventListener('input', function () {
+            const password = this.value;
+            let strength = 0;
+
+            if (password.length >= 8) strength++;
+            if (password.match(/[a-z]/)) strength++;
+            if (password.match(/[A-Z]/)) strength++;
+            if (password.match(/[0-9]/)) strength++;
+            if (password.match(/[^a-zA-Z0-9]/)) strength++;
+
+            const percentage = (strength / 5) * 100;
+            strengthFill.style.width = percentage + '%';
+
+            if (strength <= 2) {
+                strengthFill.style.background = '#ef4444';
+                strengthText.textContent = 'Slabé heslo';
+                strengthText.style.color = '#ef4444';
+            } else if (strength <= 3) {
+                strengthFill.style.background = '#f59e0b';
+                strengthText.textContent = 'Stredné heslo';
+                strengthText.style.color = '#f59e0b';
+            } else {
+                strengthFill.style.background = '#22c55e';
+                strengthText.textContent = 'Silné heslo';
+                strengthText.style.color = '#22c55e';
+            }
+        });
+
+        // Form validation
+        function validateForm() {
+            let isValid = true;
+
+            // Clear previous errors
+            document.querySelectorAll('.form-input').forEach(input => {
+                input.classList.remove('error');
+            });
+            document.querySelectorAll('.error-message').forEach(msg => {
+                msg.classList.remove('show');
+            });
+
+            // Validate first name
+            const firstName = document.getElementById('firstName');
+            if (firstName.value.trim() === '') {
+                firstName.classList.add('error');
+                document.getElementById('firstNameError').classList.add('show');
+                isValid = false;
+            }
+
+            // Validate last name
+            const lastName = document.getElementById('lastName');
+            if (lastName.value.trim() === '') {
+                lastName.classList.add('error');
+                document.getElementById('lastNameError').classList.add('show');
+                isValid = false;
+            }
+
+            // Validate username
+            const username = document.getElementById('username');
+            if (username.value.trim().length < 4) {
+                username.classList.add('error');
+                document.getElementById('usernameError').classList.add('show');
+                isValid = false;
+            }
+
+            // Validate password
+            const password = document.getElementById('password');
+            if (password.value.length < 8) {
+                password.classList.add('error');
+                document.getElementById('passwordError').classList.add('show');
+                isValid = false;
+            }
+
+            // Validate telephone (optional but if filled must be valid)
+            const telephone = document.getElementById('telephone');
+            if (telephone.value.trim() !== '') {
+                const phoneRegex = /^\+\d{1,3}\s\d{3}\s\d{3}\s\d{3}$/;
+                if (!phoneRegex.test(telephone.value.trim())) {
+                    telephone.classList.add('error');
+                    document.getElementById('telephoneError').classList.add('show');
+                    isValid = false;
+                }
+            }
+
+            // Validate email (optional but if filled must be valid)
+            const email = document.getElementById('email');
+            if (email.value.trim() !== '') {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email.value.trim())) {
+                    email.classList.add('error');
+                    document.getElementById('emailError').classList.add('show');
+                    isValid = false;
+                }
+            }
+
+            return isValid;
+        }
+
+        // Form submission
+        document.getElementById('registerForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            if (!validateForm()) {
+                return;
+            }
+
+            // Prepare data for database
+            const formData = {
+                firstname: document.getElementById('firstName').value.trim(),
+                lastname: document.getElementById('lastName').value.trim(),
+                login: document.getElementById('username').value.trim(),
+                password: document.getElementById('password').value,
+                telephone: document.getElementById('telephone').value.trim() || null,
+                email: document.getElementById('email').value.trim() || null,
+                address: document.getElementById('address').value.trim() || null
+            };
+
+            try {
+                const response = await fetch('../php/register_user.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Show success message
+                    document.getElementById('successMessage').classList.add('show');
+
+                    // Reset form
+                    this.reset();
+                    strengthFill.style.width = '0%';
+                    strengthText.textContent = '';
+
+                    // Scroll to success message
+                    document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    throw new Error(result.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Chyba pri registrácii: ' + error.message);
+            }
+        });
+
+        
+    </script>
+    <script src="js/mobile_dropdown.js"></script>
+</body>
+
+</html>

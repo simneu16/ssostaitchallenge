@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="sk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UnitMate - Admin Panel</title>
+    <link rel="stylesheet" href="../css/default.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0f2557;
+            --secondary: #1e3a8a;
+            --accent: #3b82f6;
+            --light: #f8fafc;
+            --text: #1e293b;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            color: var(--text);
+            line-height: 1.6;
+            background: var(--light);
+        }
+
+        .admin-container {
+            max-width: 1400px;
+            margin: 100px auto 40px;
+            padding: 0 2rem;
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .admin-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 1rem 2rem;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            color: var(--text);
+            white-space: nowrap;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .admin-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .data-table th {
+            background: var(--light);
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .data-table tr:hover {
+            background: var(--light);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #64748b;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge-admin {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-superadmin {
+            background: #f3e8ff;
+            color: #7c3aed;
+        }
+
+        .badge-customer {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .icon-btn {
+            padding: 0.5rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: transform 0.2s;
+        }
+
+        .icon-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .access-denied {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .access-denied h2 {
+            color: var(--danger);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 968px) {
+            .admin-container {
+                padding: 0 1rem;
+                margin-top: 80px;
+            }
+
+            .admin-header {
+                padding: 1.5rem;
+            }
+
+            .admin-header h1 {
+                font-size: 2rem;
+            }
+
+            .tabs {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                flex-wrap: nowrap;
+            }
+
+            .tab-btn {
+                padding: 0.8rem 1.2rem;
+                white-space: nowrap;
+                font-size: 0.9rem;
+            }
+
+            .admin-section {
+                padding: 1.5rem;
+            }
+
+            .section-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            /* Make tables scrollable */
+            .data-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .data-table thead,
+            .data-table tbody,
+            .data-table tr {
+                display: table;
+                width: 100%;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 0.5rem;
+                font-size: 0.85rem;
+            }
+
+            .modal-content {
+                width: 95%;
+                max-height: 85vh;
+                padding: 1.5rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .admin-header {
+                padding: 1rem;
+            }
+
+            .admin-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 1.3rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .icon-btn {
+                width: 100%;
+                padding: 0.8rem;
+            }
+
+            .badge {
+                font-size: 0.75rem;
+                padding: 0.2rem 0.6rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                left: -100%;
+                top: 60px;
+                flex-direction: column;
+                background: var(--primary);
+                width: 100%;
+                text-align: center;
+                transition: left 0.3s;
+                padding: 2rem 0;
+                gap: 0;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .nav-links li {
+                padding: 1rem 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .register-card {
+                padding: 2rem;
+            }
+
+            .register-title {
+                font-size: 2rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="../index.html" class="logo">
+                <img src="../resources/img/unitmate_logo_wb.png" alt="UnitMate Logo">
+                UnitMate
+            </a>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="../index.html">Domov</a></li>
+                <li><a href="produkty.html">Produkty</a></li>
+                <li><a href="objednavky.html">Objednávky</a></li>
+                <li><a href="cart.html">🛒 Košík</a></li>
+                <li id="authLinkContainer"><a href="login.html">Prihlásenie</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="admin-container" id="adminContainer">
+        <div class="admin-header">
+            <h1>Admin Panel</h1>
+            <p id="roleDisplay">Načítavam...</p>
+        </div>
+
+        <div class="tabs" id="adminTabs">
+            <!-- Tabs will be dynamically loaded based on role -->
+        </div>
+
+        <div id="tabContent">
+            <!-- Tab content will be dynamically loaded -->
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>UnitMate</h3>
+                <p>Pokoj v každom vchode</p>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 UnitMate. Všetky práva vyhradené.</p>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script>
+        let currentRole = 'z';
+        let currentTab = '';
+
+        async function checkAccess() {
+            const userData = sessionStorage.getItem('user') || localStorage.getItem('user');
+            if (!userData) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const user = JSON.parse(userData);
+            currentRole = user.role || 'z';
+
+            if (currentRole === 'z') {
+                document.getElementById('adminContainer').innerHTML = `
+                    <div class="access-denied">
+                        <h2>⛔ Prístup zamietnutý</h2>
+                        <p>Nemáte oprávnenie na prístup k admin panelu.</p>
+                        <button class="btn btn-primary" onclick="window.location.href='../index.html'">
+                            Späť na domovskú stránku
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            initializeAdminPanel();
+        }
+
+        function initializeAdminPanel() {
+            const roleNames = {
+                's': 'Super Admin',
+                'a': 'Admin',
+                'z': 'Zákazník'
+            };
+            document.getElementById('roleDisplay').textContent = `Prihlásený ako: ${roleNames[currentRole]}`;
+
+            const tabs = [];
+
+            if (currentRole === 's') {
+                tabs.push(
+                    { id: 'homepage', label: '🏠 Úprava domovskej stránky' },
+                    { id: 'users', label: '👥 Správa používateľov' },
+                    { id: 'products', label: '📦 Správa produktov' },
+                    { id: 'orders', label: '📋 Správa objednávok' }
+                );
+            } else if (currentRole === 'a') {
+                tabs.push(
+                    { id: 'products', label: '📦 Správa produktov' },
+                    { id: 'orders', label: '📋 Správa objednávok' }
+                );
+            }
+
+            const tabsHTML = tabs.map(tab =>
+                `<button class="tab-btn" onclick="switchTab('${tab.id}')">${tab.label}</button>`
+            ).join('');
+            document.getElementById('adminTabs').innerHTML = tabsHTML;
+
+            if (tabs.length > 0) {
+                switchTab(tabs[0].id);
+            }
+        }
+
+        function switchTab(tabId) {
+            currentTab = tabId;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event?.target?.classList.add('active');
+
+            const content = document.getElementById('tabContent');
+
+            switch (tabId) {
+                case 'homepage':
+                    loadHomepageEditor();
+                    break;
+                case 'users':
+                    loadUsersManager();
+                    break;
+                case 'products':
+                    loadProductsManager();
+                    break;
+                case 'orders':
+                    loadOrdersManager();
+                    break;
+            }
+        }
+
+        function loadHomepageEditor() {
+            document.getElementById('tabContent').innerHTML = `
+                <div class="admin-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Úprava obsahu domovskej stránky</h2>
+                    </div>
+                    <div id="homepageAlert"></div>
+                    <form id="homepageForm">
+                        <div class="form-group">
+                            <label class="form-label">Hlavný nadpis</label>
+                            <input type="text" class="form-input" id="heroTitle" value="UnitMate" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Podnadpis</label>
+                            <input type="text" class="form-input" id="heroSubtitle" value="Pokoj v každom vchode" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Popis bannera</label>
+                            <textarea class="form-textarea" id="bannerDescription">Poskytujeme komplexné riešenie pre moderné bývanie s dôrazom na bezpečnosť, pohodlie a úsporu energie.</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success">💾 Uložiť zmeny</button>
+                    </form>
+                </div>
+            `;
+
+            document.getElementById('homepageForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const alertDiv = document.getElementById('homepageAlert');
+                alertDiv.innerHTML = '<div class="alert alert-success">✓ Zmeny boli úspešne uložené!</div>';
+                setTimeout(() => alertDiv.innerHTML = '', 3000);
+            });
+        }
+
+        async function loadUsersManager() {
+            const content = `
+                <div class="admin-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Správa používateľov</h2>
+                        <button class="btn btn-primary" onclick="showAddUserModal()">➕ Pridať používateľa</button>
+                    </div>
+                    <div id="usersAlert"></div>
+                    <table class="data-table" id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Meno</th>
+                                <th>Login</th>
+                                <th>Rola</th>
+                                <th>Email</th>
+                                <th>Akcie</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <tr><td colspan="6">Načítavam...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            document.getElementById('tabContent').innerHTML = content;
+            loadUsers();
+        }
+
+        async function loadUsers() {
+            try {
+                const response = await fetch('../php/admin/get_users.php');
+                const users = await response.json();
+
+                const tbody = document.getElementById('usersTableBody');
+                tbody.innerHTML = users.map(user => `
+                    <tr>
+                        <td>${user.ID}</td>
+                        <td>${user.firstname} ${user.lastname}</td>
+                        <td>${user.login}</td>
+                        <td>${getRoleBadge(user.role)}</td>
+                        <td>${user.email || '-'}</td>
+                        <td class="action-buttons">
+                            <button class="icon-btn" onclick="editUser(${user.ID})" title="Upraviť">✏️</button>
+                            <button class="icon-btn" onclick="deleteUser(${user.ID})" title="Vymazať">🗑️</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading users:', error);
+            }
+        }
+
+        function getRoleBadge(role) {
+            const badges = {
+                's': '<span class="badge badge-superadmin">Super Admin</span>',
+                'a': '<span class="badge badge-admin">Admin</span>',
+                'z': '<span class="badge badge-customer">Zákazník</span>'
+            };
+            return badges[role] || badges['z'];
+        }
+
+        async function loadProductsManager() {
+            const content = `
+                <div class="admin-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Správa produktov</h2>
+                        <button class="btn btn-primary" onclick="showAddProductModal()">➕ Pridať produkt</button>
+                    </div>
+                    <div id="productsAlert"></div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Názov</th>
+                                <th>Kategória</th>
+                                <th>Cena</th>
+                                <th>Stav</th>
+                                <th>Akcie</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTableBody">
+                            <tr><td colspan="5">Načítavam...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            document.getElementById('tabContent').innerHTML = content;
+            loadProducts();
+        }
+
+        async function loadProducts() {
+            try {
+                const response = await fetch('../php/products_json_api.php');
+                const products = await response.json();
+
+                const tbody = document.getElementById('productsTableBody');
+                tbody.innerHTML = products.map(product => `
+                    <tr>
+                        <td>${product.name}</td>
+                        <td>${product.category}</td>
+                        <td>${product.base_price}€</td>
+                        <td>${product.status}</td>
+                        <td class="action-buttons">
+                            <button class="icon-btn" onclick="editProduct('${product.name}')" title="Upraviť">✏️</button>
+                            <button class="icon-btn" onclick="deleteProduct('${product.name}')" title="Vymazať">🗑️</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading products:', error);
+            }
+        }
+
+        async function loadOrdersManager() {
+            const content = `
+                <div class="admin-section">
+                    <div class="section-header">
+                        <h2 class="section-title">Správa objednávok</h2>
+                    </div>
+                    <div id="ordersAlert"></div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Zákazník</th>
+                                <th>Produkty</th>
+                                <th>Stav</th>
+                                <th>Cena</th>
+                                <th>Akcie</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody">
+                            <tr><td colspan="6">Načítavam...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            document.getElementById('tabContent').innerHTML = content;
+            loadOrders();
+        }
+
+        async function loadOrders() {
+            try {
+                const response = await fetch('../php/admin/get_all_orders.php');
+                const orders = await response.json();
+
+                const tbody = document.getElementById('ordersTableBody');
+                tbody.innerHTML = orders.map(order => `
+                    <tr>
+                        <td>${order.id}</td>
+                        <td>${order.customerName}</td>
+                        <td>${order.products}</td>
+                        <td>${order.status}</td>
+                        <td>${order.price}</td>
+                        <td class="action-buttons">
+                            <button class="icon-btn" onclick="editOrderStatus(${order.order_id})" title="Zmeniť stav">✏️</button>
+                            <button class="icon-btn" onclick="deleteOrder(${order.order_id})" title="Vymazať">🗑️</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading orders:', error);
+            }
+        }
+
+        // Modal and action functions
+        // User Management Functions
+        function showAddUserModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal show';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title">Pridať používateľa</h2>
+                        <button class="close-modal" onclick="this.closest('.modal').remove()">✕</button>
+                    </div>
+                    <div id="addUserAlert"></div>
+                    <form id="addUserForm">
+                        <div class="form-group">
+                            <label class="form-label">Meno *</label>
+                            <input type="text" class="form-input" name="firstname" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Priezvisko *</label>
+                            <input type="text" class="form-input" name="lastname" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Login *</label>
+                            <input type="text" class="form-input" name="login" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Heslo *</label>
+                            <input type="password" class="form-input" name="password" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Rola *</label>
+                            <select class="form-select" name="role" required>
+                                <option value="z">Zákazník</option>
+                                <option value="a">Admin</option>
+                                <option value="s">Super Admin</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-input" name="email">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Telefón</label>
+                            <input type="tel" class="form-input" name="telephone">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Adresa</label>
+                            <input type="text" class="form-input" name="address">
+                        </div>
+                        <button type="submit" class="btn btn-success">Pridať používateľa</button>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            document.getElementById('addUserForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData);
+
+                try {
+                    const response = await fetch('../php/admin/add_user.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                    const result = await response.json();
+
+                    if (result.success) {
+                        modal.remove();
+                        showAlert('usersAlert', result.message, 'success');
+                        loadUsers();
+                    } else {
+                        showAlert('addUserAlert', result.message, 'error');
+                    }
+                } catch (error) {
+                    showAlert('addUserAlert', 'Chyba pri pridávaní používateľa', 'error');
+                }
+            });
+        }
+
+        async function editUser(id) {
+            try {
+                const response = await fetch('../php/admin/get_users.php');
+                const users = await response.json();
+                const user = users.find(u => u.ID == id);
+
+                if (!user) return;
+
+                const modal = document.createElement('div');
+                modal.className = 'modal show';
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title">Upraviť používateľa</h2>
+                            <button class="close-modal" onclick="this.closest('.modal').remove()">✕</button>
+                        </div>
+                        <div id="editUserAlert"></div>
+                        <form id="editUserForm">
+                            <input type="hidden" name="id" value="${user.ID}">
+                            <div class="form-group">
+                                <label class="form-label">Meno</label>
+                                <input type="text" class="form-input" name="firstname" value="${user.firstname}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Priezvisko</label>
+                                <input type="text" class="form-input" name="lastname" value="${user.lastname}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Login</label>
+                                <input type="text" class="form-input" name="login" value="${user.login}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Nové heslo (nechajte prázdne pre zachovanie)</label>
+                                <input type="password" class="form-input" name="password">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Rola</label>
+                                <select class="form-select" name="role">
+                                    <option value="z" ${user.role === 'z' ? 'selected' : ''}>Zákazník</option>
+                                    <option value="a" ${user.role === 'a' ? 'selected' : ''}>Admin</option>
+                                    <option value="s" ${user.role === 's' ? 'selected' : ''}>Super Admin</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-success">Uložiť zmeny</button>
+                        </form>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+
+                document.getElementById('editUserForm').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const formData = new FormData(e.target);
+                    const data = Object.fromEntries(formData);
+
+                    try {
+                        const response = await fetch('../php/admin/update_user.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(data)
+                        });
+                        const result = await response.json();
+
+                        if (result.success) {
+                            modal.remove();
+                            showAlert('usersAlert', result.message, 'success');
+                            loadUsers();
+                        } else {
+                            showAlert('editUserAlert', result.message, 'error');
+                        }
+                    } catch (error) {
+                        showAlert('editUserAlert', 'Chyba pri úprave používateľa', 'error');
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading user:', error);
+            }
+        }
+
+        async function deleteUser(id) {
+            if (!confirm('Naozaj chcete vymazať tohto používateľa?')) return;
+
+            try {
+                const user_deletion_response = await fetch('../php/admin/delete_user.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id })
+                });
+                const user_deletion_result = await user_deletion_response.json();
+
+                if (user_deletion_result.success) {
+                    showAlert('usersAlert', user_deletion_result.message, 'success');
+                    loadUsers();
+                } else {
+                    showAlert('usersAlert', result.message, 'error');
+                }
+            } catch (error) {
+                console.log('Error deleting user:', error);
+                showAlert('usersAlert', 'Chyba pri mazaní používateľa', 'error');
+            }
+        }
+
+        // Product Management Functions
+        function showAddProductModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal show';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title">Pridať produkt</h2>
+                        <button class="close-modal" onclick="this.closest('.modal').remove()">✕</button>
+                    </div>
+                    <div id="addProductAlert"></div>
+                    <form id="addProductForm">
+                        <div class="form-group">
+                            <label class="form-label">Názov *</label>
+                            <input type="text" class="form-input" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Kategória *</label>
+                            <input type="text" class="form-input" name="category" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Cena *</label>
+                            <input type="number" class="form-input" name="base_price" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Stav skladu</label>
+                            <input type="number" class="form-input" name="status" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Popis</label>
+                            <textarea class="form-textarea" name="description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">URL fotky</label>
+                            <input type="text" class="form-input" name="photo_link">
+                        </div>
+                        <button type="submit" class="btn btn-success">Pridať produkt</button>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            document.getElementById('addProductForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData);
+
+                try {
+                    const response = await fetch('../php/admin/add_product.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                    const result = await response.json();
+
+                    if (result.success) {
+                        modal.remove();
+                        showAlert('productsAlert', result.message, 'success');
+                        loadProducts();
+                    } else {
+                        showAlert('addProductAlert', result.message, 'error');
+                    }
+                } catch (error) {
+                    showAlert('addProductAlert', 'Chyba pri pridávaní produktu', 'error');
+                }
+            });
+        }
+
+        async function editProduct(name) {
+            try {
+                const response = await fetch('../php/products_json_api.php');
+                const products = await response.json();
+                const product = products.find(p => p.name === name);
+
+                if (!product) return;
+
+                const modal = document.createElement('div');
+                modal.className = 'modal show';
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title">Upraviť produkt</h2>
+                            <button class="close-modal" onclick="this.closest('.modal').remove()">✕</button>
+                        </div>
+                        <div id="editProductAlert"></div>
+                        <form id="editProductForm">
+                            <input type="hidden" name="name" value="${product.name}">
+                            <div class="form-group">
+                                <label class="form-label">Kategória</label>
+                                <input type="text" class="form-input" name="category" value="${product.category}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Cena</label>
+                                <input type="number" class="form-input" name="base_price" value="${product.base_price}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Stav skladu</label>
+                                <input type="number" class="form-input" name="status" value="${product.status}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Popis</label>
+                                <textarea class="form-textarea" name="description">${product.description}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">URL fotky</label>
+                                <input type="text" class="form-input" name="photo_link" value="${product.photo_link || ''}">
+                            </div>
+                            <button type="submit" class="btn btn-success">Uložiť zmeny</button>
+                        </form>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+
+                document.getElementById('editProductForm').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const formData = new FormData(e.target);
+                    const data = Object.fromEntries(formData);
+
+                    try {
+                        const response = await fetch('../php/admin/update_product.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(data)
+                        });
+                        const result = await response.json();
+
+                        if (result.success) {
+                            modal.remove();
+                            showAlert('productsAlert', result.message, 'success');
+                            loadProducts();
+                        } else {
+                            showAlert('editProductAlert', result.message, 'error');
+                        }
+                    } catch (error) {
+                        showAlert('editProductAlert', 'Chyba pri úprave produktu', 'error');
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading product:', error);
+            }
+        }
+
+        async function deleteProduct(name) {
+            if (!confirm('Naozaj chcete vymazať tento produkt?')) return;
+
+            try {
+                const response = await fetch('../php/admin/delete_product.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name })
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    showAlert('productsAlert', result.message, 'success');
+                    loadProducts();
+                } else {
+                    showAlert('productsAlert', result.message, 'error');
+                }
+            } catch (error) {
+                showAlert('productsAlert', 'Chyba pri mazaní produktu', 'error');
+            }
+        }
+
+        // Order Management Functions
+        async function editOrderStatus(id) {
+            const modal = document.createElement('div');
+            modal.className = 'modal show';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title">Zmeniť stav objednávky</h2>
+                        <button class="close-modal" onclick="this.closest('.modal').remove()">✕</button>
+                    </div>
+                    <div id="editOrderAlert"></div>
+                    <form id="editOrderForm">
+                        <input type="hidden" name="order_id" value="${id}">
+                        <div class="form-group">
+                            <label class="form-label">Nový stav</label>
+                            <select class="form-select" name="status" required>
+                                <option value="pending">Čaká sa</option>
+                                <option value="processing">V spracovaní</option>
+                                <option value="shipped">Odoslané</option>
+                                <option value="delivered">Doručené</option>
+                                <option value="cancelled">Zrušené</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success">Uložiť zmeny</button>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            document.getElementById('editOrderForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData);
+
+                try {
+                    const response = await fetch('../php/admin/update_order.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                    const result = await response.json();
+
+                    if (result.success) {
+                        modal.remove();
+                        showAlert('ordersAlert', result.message, 'success');
+                        loadOrders();
+                    } else {
+                        showAlert('editOrderAlert', result.message, 'error');
+                    }
+                } catch (error) {
+                    showAlert('editOrderAlert', 'Chyba pri úprave objednávky', 'error');
+                }
+            });
+        }
+
+        async function deleteOrder(id) {
+            if (!confirm('Naozaj chcete vymazať túto objednávku?')) return;
+
+            try {
+                const response = await fetch('../php/admin/delete_order.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ order_id: id })
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    showAlert('ordersAlert', result.message, 'success');
+                    loadOrders();
+                } else {
+                    showAlert('ordersAlert', result.message, 'error');
+                }
+            } catch (error) {
+                showAlert('ordersAlert', 'Chyba pri mazaní objednávky', 'error');
+            }
+        }
+
+        // Helper function for alerts
+        function showAlert(elementId, message, type) {
+            const alertDiv = document.getElementById(elementId);
+            if (!alertDiv) return;
+
+            alertDiv.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            setTimeout(() => alertDiv.innerHTML = '', 5000);
+        }
+
+        checkAccess();
+    </script>
+</body>
+
+</html>

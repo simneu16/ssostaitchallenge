@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="sk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UnitMate - Profil</title>
+    <link rel="stylesheet" href="../css/default.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0f2557;
+            --secondary: #1e3a8a;
+            --accent: #3b82f6;
+            --light: #f8fafc;
+            --text: #1e293b;
+            --success: #22c55e;
+            --warning: #f59e0b;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            color: var(--text);
+            line-height: 1.6;
+            background: var(--light);
+        }
+
+        /* Navbar */
+        nav {
+            background: var(--primary);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 500;
+            font-size: 1rem;
+            /* Set explicit font size for all nav items */
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        #authLinkContainer a {
+            font-size: inherit;
+            /* Inherit font size from parent */
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            transition: all 0.3s;
+        }
+
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        /* Profile Container */
+        .profile-container {
+            max-width: 1200px;
+            margin: 100px auto 80px;
+            padding: 0 2rem;
+        }
+
+        /* Profile Header */
+        .profile-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 3rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent) 0%, #60a5fa 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: 700;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-username {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-role {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .action-btn {
+            padding: 0.8rem 1.5rem;
+            background: white;
+            color: var(--primary);
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .action-btn.logout {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+        }
+
+        /* Tabs */
+        .profile-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .tab {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .tab.active {
+            color: var(--primary);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent);
+        }
+
+        .tab:hover {
+            color: var(--accent);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Info Cards */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .info-card h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .info-value {
+            color: var(--text);
+            font-weight: 600;
+            text-align: right;
+        }
+
+        /* Statistics */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .stat-icon.blue {
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .stat-icon.green {
+            background: rgba(34, 197, 94, 0.1);
+        }
+
+        .stat-icon.orange {
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .stat-icon.purple {
+            background: rgba(168, 85, 247, 0.1);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        /* Orders List */
+        .orders-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .order-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .order-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-details {
+            flex: 1;
+        }
+
+        .order-id {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .order-products {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .order-status {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .status-delivered {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .status-shipped {
+            background: #e0e7ff;
+            color: #4338ca;
+        }
+
+        .status-processing {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .order-price {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-left: 2rem;
+        }
+
+        /* Edit Form */
+        .edit-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e1;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: white;
+            padding: 3rem 2rem 1rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* ===== profile / auth styles (added) ===== */
+        .profile-wrap {
+            position: relative;
+            font-family: inherit;
+        }
+
+        .profile-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        .profile-btn:focus {
+            outline: 2px solid rgba(255, 255, 255, 0.12);
+            outline-offset: 2px;
+        }
+
+        .profile-icon svg {
+            width: 18px;
+            height: 18px;
+            fill: white;
+            opacity: 0.95;
+            display: block;
+        }
+
+        .profile-name {
+            color: white;
+            white-space: nowrap;
+        }
+
+        .profile-caret {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.8rem;
+        }
+
+        .profile-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: calc(100% + 8px);
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 8px 30px rgba(16, 24, 40, 0.12);
+            overflow: hidden;
+            min-width: 200px;
+            z-index: 1500;
+            font-size: 0.95rem;
+        }
+
+        .profile-item {
+            display: block;
+            padding: 10px 14px;
+            color: var(--text);
+            text-decoration: none;
+            background: transparent;
+            border: 0;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .profile-item:hover {
+            background: #f8fafc;
+        }
+
+        .profile-item.logout {
+            background: #fff7f7;
+            color: #b91c1c;
+        }
+
+        /* ===== end profile styles ===== */
+
+        @media (max-width: 968px) {
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+                padding: 2rem;
+            }
+
+            .profile-avatar {
+                width: 100px;
+                height: 100px;
+                font-size: 2.5rem;
+            }
+
+            .profile-name {
+                font-size: 2rem;
+            }
+
+            .profile-actions {
+                flex-direction: column;
+                width: 100%;
+                gap: 0.5rem;
+            }
+
+            .action-btn {
+                width: 100%;
+            }
+
+            .profile-tabs {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .tab {
+                padding: 0.8rem 1.2rem;
+                white-space: nowrap;
+                font-size: 0.9rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .stat-card {
+                padding: 1.5rem;
+            }
+
+            .stat-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .order-item {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .order-price {
+                margin-left: 0;
+                align-self: flex-end;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-container {
+                padding: 0 1rem;
+            }
+
+            .profile-header {
+                padding: 1.5rem;
+                border-radius: 15px;
+            }
+
+            .profile-name {
+                font-size: 1.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .info-card {
+                padding: 1.5rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                left: -100%;
+                top: 60px;
+                flex-direction: column;
+                background: var(--primary);
+                width: 100%;
+                text-align: center;
+                transition: left 0.3s;
+                padding: 2rem 0;
+                gap: 0;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .nav-links li {
+                padding: 1rem 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .register-card {
+                padding: 2rem;
+            }
+
+            .register-title {
+                font-size: 2rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav>
+        <div class="nav-container">
+            <a href="../index.html" class="logo">
+                <img src="../resources/img/unitmate_logo_wb.png" alt="UnitMate Logo">
+                UnitMate
+            </a>
+            <div class="menu-toggle" id="mobile-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="../index.html">Domov</a></li>
+                <li><a href="produkty.html">Produkty</a></li>
+                <li><a href="objednavky.html">Objednávky</a></li>
+                <li><a href="cart.html" title="Košík">🛒 Košík</a></li>
+                <li id="authLinkContainer"><a href="login.html">Prihlásenie</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Profile Container -->
+    <div class="profile-container">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-avatar">JN</div>
+            <div class="profile-info">
+                <div class="profile-name">Ján Novák</div>
+                <div class="profile-username">@jan.novak</div>
+                <span class="profile-role">👤 Zákazník</span>
+            </div>
+            <div class="profile-actions">
+                <button class="action-btn" onclick="switchTab('edit')">✏️ Upraviť profil</button>
+                <button class="action-btn logout" onclick="logout()">🚪 Odhlásiť sa</button>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="profile-tabs">
+            <button class="tab active" onclick="switchTab('overview')">📊 Prehľad</button>
+            <button class="tab" onclick="switchTab('orders')">📦 Objednávky</button>
+            <button class="tab" onclick="switchTab('info')">ℹ️ Informácie</button>
+            <button class="tab" onclick="switchTab('edit')">⚙️ Nastavenia</button>
+        </div>
+
+        <!-- Overview Tab -->
+        <div id="overview" class="tab-content active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon blue">📦</div>
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Celkový počet objednávok</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green">✓</div>
+                    <div class="stat-value">9</div>
+                    <div class="stat-label">Doručené objednávky</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon orange">🚚</div>
+                    <div class="stat-value">2</div>
+                    <div class="stat-label">Aktívne objednávky</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon purple">💰</div>
+                    <div class="stat-value">1847€</div>
+                    <div class="stat-label">Celková útrata</div>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <h3>🕐 Posledné objednávky</h3>
+                <div class="orders-list">
+                    <div class="order-item">
+                        <div class="order-details">
+                            <div class="order-id">ORD-001</div>
+                            <div class="order-products">Smart Door Lock, WiFi Camera</div>
+                        </div>
+                        <span class="order-status status-delivered">Doručené</span>
+                        <div class="order-price">283€</div>
+                    </div>
+                    <div class="order-item">
+                        <div class="order-details">
+                            <div class="order-id">ORD-008</div>
+                            <div class="order-products">Smart Thermostat</div>
+                        </div>
+                        <span class="order-status status-shipped">Odoslané</span>
+                        <div class="order-price">129€</div>
+                    </div>
+                    <div class="order-item">
+                        <div class="order-details">
+                            <div class="order-id">ORD-015</div>
+                            <div class="order-products">Motion Sensor, Smart Plug (2x)</div>
+                        </div>
+                        <span class="order-status status-processing">Spracováva sa</span>
+                        <div class="order-price">103€</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders Tab -->
+        <div id="orders" class="tab-content">
+            <div class="info-card">
+                <h3>📦 Všetky objednávky</h3>
+                <div class="orders-list">
+                    <div class="order-item">
+                        <div class="order-details">
+                            <div class="order-id">ORD-001 • 25.10.2025</div>
+                            <div class="order-products">Smart Door Lock, WiFi Security Camera, Motion Sensor</div>
+                        </div>
+                        <span class="order-status status-delivered">Doručené</span>
+                        <div class="order-price">283€</div>
+                    </div>
+                    <div class="order-item">
+                        <div class="order-details">
+                            <div class="order-id">ORD-008 • 28.10.2025</div>
+                            <div class="order-products">Smart Thermostat</div>
+                        </div>
+                        <span class="order-status status-shipped">Odoslané</span>
+                        <div class="order-price">129€</div>
+                    </div>
+                    <div class="order-item">
+                        <div class="order-details">
+                            <div class="order-id">ORD-015 • 30.10.2025</div>
+                            <div class="order-products">Motion Sensor, Smart Plug (2x)</div>
+                        </div>
+                        <span class="order-status status-processing">Spracováva sa</span>
+                        <div class="order-price">103€</div>
+                    </div>
+                    <div class="order-item">
+                        <div class="order-details">
+                            <div class="order-id">ORD-021 • 15.10.2025</div>
+                            <div class="order-products">Smart Light Hub, Water Leak Detector</div>
+                        </div>
+                        <span class="order-status status-delivered">Doručené</span>
+                        <div class="order-price">134€</div>
+                    </div>
+                    <div class="order-item">
+                        <div class="order-details">
+                            <div class="order-id">ORD-027 • 08.10.2025</div>
+                            <div class="order-products">Smart Doorbell</div>
+                        </div>
+                        <span class="order-status status-delivered">Doručené</span>
+                        <div class="order-price">119€</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Tab -->
+        <div id="info" class="tab-content">
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3>👤 Osobné údaje</h3>
+                    <div class="info-item">
+                        <span class="info-label">Meno</span>
+                        <span class="info-value"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Priezvisko</span>
+                        <span class="info-value"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Užívateľské meno</span>
+                        <span class="info-value"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Rola</span>
+                        <span class="info-value"></span>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>📧 Kontaktné údaje</h3>
+                    <div class="info-item">
+                        <span class="info-label">Email</span>
+                        <span class="info-value">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Telefón</span>
+                        <span class="info-value">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Adresa</span>
+                        <span class="info-value">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Tab -->
+        <div id="edit" class="tab-content">
+            <form class="edit-form" id="editForm">
+                <h3 style="color: var(--primary); margin-bottom: 1.5rem;">⚙️ Upraviť profil</h3>
+
+                <div class="form-group">
+                    <label class="form-label">Meno</label>
+                    <input type="text" class="form-input" value="Ján">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Priezvisko</label>
+                    <input type="text" class="form-input" value="Novák">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" value="jan.novak@email.sk">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Telefón</label>
+                    <input type="tel" class="form-input" value="+421 901 234 567">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Adresa</label>
+                    <input type="text" class="form-input" value="Hlavná 123, Bratislava 811 01">
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">💾 Uložiť zmeny</button>
+                    <button type="button" class="btn btn-secondary" onclick="switchTab('overview')">❌ Zrušiť</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>UnitMate</h3>
+                <p>Pokoj v každom vchode</p>
+                <p>Prinášame inteligentné riešenia pre moderné bývanie.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Kontakt</h3>
+                <p>📧 info@unitmate.sk</p>
+                <p>📱 +421 900 123 456</p>
+                <p>📍 Bratislava, Slovensko</p>
+            </div>
+            <div class="footer-section">
+                <h3>Rýchle odkazy</h3>
+                <a href="../index.html">Domov</a>
+                <a href="produkty.html">Produkty</a>
+                <a href="objednavky.html">Objednávky</a>
+                <a href="login.html">Prihlásenie</a>
+            </div>
+            <div class="footer-section">
+                <h3>Sledujte nás</h3>
+                <a href="#">Facebook</a>
+                <a href="#">Instagram</a>
+                <a href="#">LinkedIn</a>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 UnitMate. Všetky práva vyhradené.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Tab switching
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+
+            // Update tab button
+            const tabs = document.querySelectorAll('.tab');
+            const tabNames = ['overview', 'orders', 'info', 'edit'];
+            const index = tabNames.indexOf(tabName);
+            if (index !== -1) {
+                tabs[index].classList.add('active');
+            }
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Naozaj sa chcete odhlásiť?')) {
+                sessionStorage.removeItem('user');
+                localStorage.removeItem('user');
+                fetch('../php/logout_user.php', {
+                    method: 'POST',
+                    credentials: 'same-origin'
+                });
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Mobile menu toggle
+    </script>
+
+    <script src="js/mobile_dropdown.js"></script>
+    <!-- load shared auth UI script -->
+    <script src="js/auth.js"></script>
+
+    <!-- Load profile logic -->
+    <script src="js/profile_logic.js"></script>
+
+    <script src="js/cart.js"></script>
+</body>
+
+</html>

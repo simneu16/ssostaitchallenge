@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="sk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UnitMate - Pokoj v každom vchode</title>
+    <link rel="stylesheet" href="css/default.css">
+    <style>
+        nav {
+            background: var(--primary);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 150px 2rem 100px;
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            background: white;
+            color: var(--primary);
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Features Section */
+        .features {
+            max-width: 1200px;
+            margin: 80px auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 3rem;
+            font-weight: 700;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+        }
+
+        .feature-card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        /* Banner Section */
+        .banner {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            color: white;
+            padding: 80px 2rem;
+            text-align: center;
+            margin: 80px 0;
+        }
+
+        .banner h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .banner p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        /* Team Section */
+        .team {
+            max-width: 1200px;
+            margin: 80px auto;
+            padding: 0 2rem;
+        }
+
+        .team-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        .team-row {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .team-row-2 .team-member {
+            flex: 0 1 calc(50% - 1rem);
+            max-width: 300px;
+        }
+
+        .team-row-3 .team-member {
+            flex: 0 1 calc(33.333% - 1.5rem);
+            max-width: 280px;
+        }
+
+        .team-member {
+            text-align: center;
+            transition: transform 0.3s;
+            padding: 1rem;
+        }
+
+        .team-member:hover {
+            transform: translateY(-10px);
+        }
+
+        .team-photo {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--secondary) 100%);
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            color: white;
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+            transition: all 0.3s;
+        }
+
+        .team-member.manager .team-photo {
+            background: linear-gradient(135deg, #a040fa 0%, #622ebd 100%);
+        }
+
+        .team-member:hover .team-photo {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.4);
+        }
+
+        .team-member:hover .team-leader-photo {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.4);
+        }
+
+        .team-member h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .team-member p {
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+
+        .team-section-divider {
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            margin: 0 auto;
+        }
+
+        /* Image Banner */
+        .image-banner {
+            height: 400px;
+            background: linear-gradient(rgba(15, 37, 87, 0.7), rgba(15, 37, 87, 0.7)),
+                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400"><rect fill="%233b82f6" width="1200" height="400"/><path fill="%230f2557" opacity="0.3" d="M0,200 Q300,100 600,200 T1200,200 L1200,400 L0,400 Z"/></svg>');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+        }
+
+        .image-banner-content h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                left: -100%;
+                top: 60px;
+                flex-direction: column;
+                background: var(--primary);
+                width: 100%;
+                text-align: center;
+                transition: left 0.3s;
+                padding: 2rem 0;
+                gap: 0;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .nav-links li {
+                padding: 1rem 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .register-card {
+                padding: 2rem;
+            }
+
+            .register-title {
+                font-size: 2rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .features {
+                padding: 0 1rem;
+                margin: 60px auto;
+            }
+
+            .section-title {
+                font-size: 2rem;
+                margin-bottom: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .feature-card {
+                padding: 1.5rem;
+            }
+
+            .feature-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .team {
+                padding: 0 1rem;
+                margin: 60px auto;
+            }
+
+            .team-row {
+                flex-direction: column;
+                align-items: center;
+                gap: 2rem;
+            }
+
+            .team-row-2 .team-member,
+            .team-row-3 .team-member {
+                flex: 1 1 100%;
+                max-width: 280px;
+            }
+
+            .team-photo {
+                width: 150px;
+                height: 150px;
+                font-size: 3rem;
+            }
+
+            .team-member h3 {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .banner {
+                padding: 60px 1rem;
+                margin: 60px 0;
+            }
+
+            .banner h2 {
+                font-size: 2rem;
+            }
+
+            .banner p {
+                font-size: 1rem;
+                padding: 0 1rem;
+            }
+
+            .image-banner {
+                height: 250px;
+            }
+
+            .image-banner-content h2 {
+                font-size: 1.8rem;
+                padding: 0 1rem;
+            }
+        }
+
+
+        .profile-wrap {
+            position: relative;
+            font-family: inherit;
+        }
+
+        .profile-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-weight: 700;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        .profile-icon svg {
+            width: 18px;
+            height: 18px;
+            fill: white;
+            opacity: 0.95;
+            display: block;
+        }
+
+        .profile-name {
+            color: white;
+            white-space: nowrap;
+        }
+
+        .profile-caret {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.8rem;
+        }
+
+        .profile-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: calc(100% + 8px);
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 8px 30px rgba(16, 24, 40, 0.12);
+            overflow: hidden;
+            min-width: 200px;
+            z-index: 1500;
+            font-size: 0.95rem;
+        }
+
+        .profile-item {
+            display: block;
+            padding: 10px 14px;
+            color: var(--text, #1e293b);
+            text-decoration: none;
+            background: transparent;
+            border: 0;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .profile-item:hover {
+            background: #f8fafc;
+        }
+
+        .profile-item.logout {
+            background: #fff7f7;
+            color: #b91c1c;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="resources/img/unitmate_logo_wb.png" alt="UnitMate Logo">
+                UnitMate
+            </a>
+            <div class="menu-toggle" id="mobile-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#home">Domov</a></li>
+                <li><a href="html/produkty.html">Produkty</a></li>
+                <li><a href="html/objednavky.html">Objednávky</a></li>
+                <li><a href="html/cart.html" title="Košík">🛒 Košík</a></li>
+                <li id="authLinkContainer"><a href="html/login.html">Prihlásenie</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <h1>UnitMate</h1>
+        <p>Pokoj v každom vchode</p>
+        <a href="html/produkty.html"><button class="cta-button">Začať teraz</button></a>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2 class="section-title">Inteligentné riešenia pre váš domov</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🏠</div>
+                <h3>Smart Monitoring</h3>
+                <p>Sledujte svoj domov kedykoľvek a kdekoľvek pomocou moderných technológií a mobilnej aplikácie.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>Bezpečnosť</h3>
+                <p>Pokročilé zabezpečenie s automatickým zamykaním a kontrolou prístupu pre maximálny pokoj.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💡</div>
+                <h3>Automatizácia</h3>
+                <p>Inteligentné ovládanie osvetlenia, vykurovania a ostatných zariadení pre pohodlie a úsporu energie.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Banner -->
+    <section class="banner">
+        <h2>Prečo zvoliť UnitMate?</h2>
+        <p>Poskytujeme komplexné riešenie pre moderné bývanie s dôrazom na bezpečnosť, pohodlie a úsporu energie. Naše
+            technológie sú navrhnuté tak, aby vám uľahčili každodenný život.</p>
+        <button class="cta-button">Zistiť viac</button>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team" id="team">
+        <h2 class="section-title">Náš tím</h2>
+        <div class="team-grid">
+            <!-- Row 1: 2 people - Leadership -->
+            <h1 style="display: flex; justify-content: center;">Dizajn</h1>
+            <div class="team-row team-row-2">
+                <div class="team-member manager">
+                    <div class="team-photo">ŠN</div>
+                    <h3>Šimon Neumeister</h3>
+                    <p>Manažér</p>
+                </div>
+                <div class="team-member">
+                    <div class="team-photo">MO</div>
+                    <h3>Matúš Ondrejička</h3>
+                </div>
+                <div class="team-member manager">
+                    <div class="team-photo">ŠG</div>
+                    <h3>Šarlota Gallovičová</h3>
+                    <p>Manažérka
+                </div>
+            </div>
+
+            <div class="team-section-divider"></div>
+            <h1 style="display: flex; justify-content: center;">Softvér</h1>
+            <!-- Row 2: 2 people - Development -->
+            <div class="team-row team-row-2">
+
+                <div class="team-member">
+                    <div class="team-photo">TK</div>
+                    <h3>Tomáš Koštial</h3>
+                </div>
+                <div class="team-member">
+                    <div class="team-photo">PD</div>
+                    <h3>Pavol Dunka</h3>
+                </div>
+            </div>
+
+            <div class="team-section-divider"></div>
+
+            <!-- Row 3: 3 people - Product & Design -->
+            <h1 style="display: flex; justify-content: center;">Údržba siete</h1>
+            <div class="team-row team-row-3">
+                <div class="team-member">
+                    <div class="team-photo">ŠP</div>
+                    <h3>Šimon Piršel</h3>
+
+                </div>
+                <div class="team-member">
+                    <div class="team-photo">MD</div>
+                    <h3>Martin Diačik</h3>
+
+                </div>
+            </div>
+
+            <div class="team-section-divider"></div>
+
+            <!-- Row 4: 2 people - Sales & Support -->
+            <h1 style="display: flex; justify-content: center;">IoT a Smart tech</h1>
+            <div class="team-row team-row-2">
+                <div class="team-member">
+                    <div class="team-photo">KŽ</div>
+                    <h3>Kristián Žuffa</h3>
+                </div>
+                <div class="team-member">
+                    <div class="team-photo">MP</div>
+                    <h3>Martin Pospíšil</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Image Banner -->
+    <section class="image-banner">
+        <div class="image-banner-content">
+            <h2>Moderné technológie pre váš komfort</h2>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>UnitMate</h3>
+                <p>Pokoj v každom vchode</p>
+                <p>Prinášame inteligentné riešenia pre moderné bývanie.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Kontakt</h3>
+                <p>📧 info@unitmate.sk</p>
+                <p>📱 +421 900 123 456</p>
+                <p>📍 Bratislava, Slovensko</p>
+            </div>
+            <div class="footer-section">
+                <h3>Rýchle odkazy</h3>
+                <a href="index.html">Domov</a>
+                <a href="#features">Funkcie</a>
+                <a href="#team">Tím</a>
+                <a href="#contact">Kontakt</a>
+            </div>
+            <div class="footer-section">
+                <h3>Sledujte nás</h3>
+                <a href="#">Facebook</a>
+                <a href="#">Instagram</a>
+                <a href="#">LinkedIn</a>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 UnitMate. Všetky práva vyhradené.</p>
+        </div>
+    </footer>
+    <script src="html/js/mobile_dropdown.js"> </script>
+
+    <!-- include shared auth script -->
+    <script src="html/js/auth.js"></script>
+
+    <script src="html/js/cart.js"></script>
+</body>
+
+</html>
